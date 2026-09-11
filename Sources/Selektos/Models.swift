@@ -114,7 +114,8 @@ struct QueryTab: Identifiable, Codable, Hashable {
     var schema: String?
 }
 
-struct QueryResult: Sendable {
+struct QueryResult: Identifiable, Sendable {
+    let id = UUID()
     let columns: [String]
     let rows: [QueryResultRow]
     let command: String

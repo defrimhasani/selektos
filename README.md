@@ -59,9 +59,9 @@ Preferences use macOS `UserDefaults`. Workspace/query state remains in `~/Librar
 Authenticate Wrangler before adding a D1 connection:
 
 ```sh
-npx wrangler login
+wrangler login
 ```
 
-In the connection sheet, choose **Cloudflare D1**, provide the Wrangler executable path, and click **Discover**. If Wrangler is installed globally, `wrangler` is sufficient. For a project-local install, provide the full path to its executable, typically `node_modules/.bin/wrangler`.
+In the connection sheet, choose **Cloudflare D1**, leave the Wrangler executable as `wrangler`, and click **Discover**. Selektos automatically detects common global installations, including Homebrew, npm, and NVM. For a project-local install, provide the full path to its executable, typically `node_modules/.bin/wrangler`.
 
 The app executes D1 queries remotely with `wrangler d1 execute --remote --json`. Cloudflare tokens are managed entirely by Wrangler and are not read or stored by Selektos.

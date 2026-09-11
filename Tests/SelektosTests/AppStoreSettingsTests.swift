@@ -59,6 +59,47 @@ final class AppStoreSettingsTests: XCTestCase {
         XCTAssertEqual(store.selectedWorkspace?.queryTabs.first?.sql, "SELECT 42;")
     }
 
+    func testD1ConnectionUsesCompatibleDefaultQuery() {
+        let connection = d1Connection()
+        var workspace = Workspace(name: "D1")
+        workspace.connections = [connection]
+        workspace.queryTabs[0].connectionID = connection.id
+        workspace.queryTabs[0].sql = AppPreferences.defaultQuery
+
+        let store = AppStore(
+            initialState: AppState(
+                workspaces: [workspace],
+                selectedWorkspaceID: workspace.id
+            ),
+            persistsState: false
+        )
+
+        XCTAssertEqual(store.selectedQuery?.sql, "SELECT 1 AS result;")
+
+        store.addQuery()
+
+        XCTAssertEqual(store.selectedQuery?.sql, "SELECT 1 AS result;")
+        XCTAssertEqual(store.selectedQuery?.connectionID, connection.id)
+    }
+
+    func testSelectingD1ConnectionDoesNotReplaceEditedQuery() {
+        let connection = d1Connection()
+        var workspace = Workspace(name: "D1")
+        workspace.connections = [connection]
+        workspace.queryTabs[0].sql = "SELECT 42;"
+        let store = AppStore(
+            initialState: AppState(
+                workspaces: [workspace],
+                selectedWorkspaceID: workspace.id
+            ),
+            persistsState: false
+        )
+
+        store.selectConnection(connection.id)
+
+        XCTAssertEqual(store.selectedQuery?.sql, "SELECT 42;")
+    }
+
     func testResultRowSelectionIsValidatedAndClearedWithExecutionContext() {
         var workspace = Workspace(name: "Rows")
         let secondQuery = QueryTab(title: "Second", sql: "SELECT 2;")
@@ -90,5 +131,21 @@ final class AppStoreSettingsTests: XCTestCase {
         store.selectQuery(secondQuery.id)
         XCTAssertNil(store.result)
         XCTAssertNil(store.selectedResultRowID)
+    }
+
+    private func d1Connection() -> DatabaseConnection {
+        DatabaseConnection(
+            kind: .cloudflareD1,
+            name: "Cloudflare D1",
+            host: "",
+            port: 0,
+            database: "example",
+            username: "",
+            tlsMode: .prefer,
+            labels: [],
+            d1Database: "example",
+            wranglerPath: "wrangler",
+            wranglerProfile: ""
+        )
     }
 }

@@ -36,6 +36,7 @@ enum AppPreferences {
     static let selectedSettingsPaneKey = "settings.selectedPane"
 
     static let defaultQuery = "SELECT version();"
+    static let d1DefaultQuery = "SELECT 1 AS result;"
     static let rowLimitOptions = [1_000, 5_000, 10_000, 25_000]
 
     static func registerDefaults() {
@@ -62,5 +63,18 @@ enum AppPreferences {
             .trimmingCharacters(in: .whitespacesAndNewlines),
               !value.isEmpty else { return defaultQuery }
         return value
+    }
+
+    static func defaultQueryText(for connectionKind: ConnectionKind?) -> String {
+        let configuredQuery = defaultQueryText
+        guard connectionKind == .cloudflareD1, configuredQuery == defaultQuery else {
+            return configuredQuery
+        }
+        return d1DefaultQuery
+    }
+
+    static func isBuiltInDefaultQuery(_ sql: String) -> Bool {
+        let query = sql.trimmingCharacters(in: .whitespacesAndNewlines)
+        return query == defaultQuery || query == d1DefaultQuery
     }
 }

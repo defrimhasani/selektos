@@ -38,6 +38,9 @@ final class AppStore {
         } else if state.selectedWorkspaceID == nil {
             state.selectedWorkspaceID = state.workspaces.first?.id
         }
+        if updateSelectedQueryDefault() {
+            save()
+        }
     }
 
     var selectedWorkspace: Workspace? {
@@ -182,8 +185,14 @@ final class AppStore {
 
     func selectConnection(_ id: UUID) {
         guard let workspaceIndex = selectedWorkspaceIndex,
-              let queryIndex = selectedQueryIndex(in: workspaceIndex) else { return }
+              let queryIndex = selectedQueryIndex(in: workspaceIndex),
+              let connection = state.workspaces[workspaceIndex].connections.first(where: { $0.id == id }) else { return }
         state.workspaces[workspaceIndex].queryTabs[queryIndex].connectionID = id
+        updateQueryDefault(
+            at: queryIndex,
+            in: workspaceIndex,
+            for: connection.connectionKind
+        )
         clearExecution()
         save()
     }
@@ -209,6 +218,13 @@ final class AppStore {
         return names.sorted()
     }
 
+    var completionSchemas: [DatabaseSchema] {
+        guard let connection = selectedConnection else { return [] }
+        return schemas(for: connection.id, database: connection.database)
+            ?? schemasByConnection[connection.id]
+            ?? []
+    }
+
     func selectSchema(_ schema: String?) {
         guard let workspaceIndex = selectedWorkspaceIndex,
               let queryIndex = selectedQueryIndex(in: workspaceIndex),
@@ -220,14 +236,20 @@ final class AppStore {
     /// Loads the database and schema lists the focus pickers need, without
     /// repeating work that is already done or in flight.
     func ensureMetadataLoaded(for connection: DatabaseConnection) {
-        guard connection.connectionKind == .postgresql,
-              UserDefaults.standard.bool(forKey: AppPreferences.automaticallyLoadMetadataKey) else { return }
-        if databasesByConnection[connection.id] == nil, connectionStatus[connection.id] != .loading {
-            loadDatabases(for: connection)
-        }
-        if schemas(for: connection.id, database: connection.database) == nil,
-           status(for: connection.id, database: connection.database) != .loading {
-            loadSchema(for: connection, database: connection.database)
+        guard UserDefaults.standard.bool(forKey: AppPreferences.automaticallyLoadMetadataKey) else { return }
+        switch connection.connectionKind {
+        case .postgresql:
+            if databasesByConnection[connection.id] == nil, connectionStatus[connection.id] != .loading {
+                loadDatabases(for: connection)
+            }
+            if schemas(for: connection.id, database: connection.database) == nil,
+               status(for: connection.id, database: connection.database) != .loading {
+                loadSchema(for: connection, database: connection.database)
+            }
+        case .cloudflareD1:
+            if schemasByConnection[connection.id] == nil, connectionStatus[connection.id] != .loading {
+                loadSchema(for: connection)
+            }
         }
     }
 
@@ -239,13 +261,23 @@ final class AppStore {
         guard let workspaceIndex = selectedWorkspaceIndex else { return }
         let tab = QueryTab(
             title: title,
-            sql: sql ?? AppPreferences.defaultQueryText,
+            sql: sql ?? AppPreferences.defaultQueryText(for: selectedConnection?.connectionKind),
             connectionID: selectedConnection?.id,
             schema: schema
         )
         state.workspaces[workspaceIndex].queryTabs.append(tab)
         state.workspaces[workspaceIndex].selectedQueryID = tab.id
         clearExecution()
+        save()
+    }
+
+    func renameQuery(_ id: UUID, to title: String) {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              let workspaceIndex = selectedWorkspaceIndex,
+              let queryIndex = state.workspaces[workspaceIndex].queryTabs.firstIndex(where: { $0.id == id }),
+              state.workspaces[workspaceIndex].queryTabs[queryIndex].title != trimmed else { return }
+        state.workspaces[workspaceIndex].queryTabs[queryIndex].title = trimmed
         save()
     }
 
@@ -459,6 +491,32 @@ final class AppStore {
         if state.workspaces[index].selectedQueryID == nil {
             state.workspaces[index].selectedQueryID = state.workspaces[index].queryTabs.first?.id
         }
+    }
+
+    @discardableResult
+    private func updateSelectedQueryDefault() -> Bool {
+        guard let workspaceIndex = selectedWorkspaceIndex,
+              let queryIndex = selectedQueryIndex(in: workspaceIndex),
+              let connection = selectedConnection else { return false }
+        return updateQueryDefault(
+            at: queryIndex,
+            in: workspaceIndex,
+            for: connection.connectionKind
+        )
+    }
+
+    @discardableResult
+    private func updateQueryDefault(
+        at queryIndex: Int,
+        in workspaceIndex: Int,
+        for connectionKind: ConnectionKind
+    ) -> Bool {
+        let currentQuery = state.workspaces[workspaceIndex].queryTabs[queryIndex].sql
+        guard AppPreferences.isBuiltInDefaultQuery(currentQuery) else { return false }
+        let replacement = AppPreferences.defaultQueryText(for: connectionKind)
+        guard currentQuery != replacement else { return false }
+        state.workspaces[workspaceIndex].queryTabs[queryIndex].sql = replacement
+        return true
     }
 
     private func clearExecution() {

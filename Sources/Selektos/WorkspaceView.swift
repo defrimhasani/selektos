@@ -354,8 +354,13 @@ private struct ConnectionRow: View {
             Image(systemName: connection.connectionKind == .cloudflareD1 ? "cloud.fill" : "cylinder.split.1x2.fill").foregroundStyle(statusColor)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 5) {
-                    Text(connection.name).fontWeight(.medium).lineLimit(1)
-                    ForEach(connection.labels) { ConnectionLabelBadge(label: $0) }
+                    Text(connection.name)
+                        .fontWeight(.medium)
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                    if !connection.labels.isEmpty {
+                        ConnectionLabelsBadge(labels: connection.labels)
+                    }
                 }
                 Text("\(connection.engineName) · \(connection.endpoint)").font(.system(size: 10)).foregroundStyle(.tertiary).lineLimit(1)
             }
@@ -367,22 +372,36 @@ private struct ConnectionRow: View {
     }
 }
 
-private struct ConnectionLabelBadge: View {
-    let label: ConnectionLabel
+private struct ConnectionLabelsBadge: View {
+    let labels: [ConnectionLabel]
+
+    private var text: String {
+        labels.map(\.name).joined(separator: " · ")
+    }
+
     var body: some View {
-        Text(label.name.uppercased())
-            .font(.system(size: 8, weight: .bold, design: .rounded)).tracking(0.3)
-            .foregroundStyle(label.color.swiftUIColor)
-            .padding(.horizontal, 5).padding(.vertical, 2)
-            .background(label.color.swiftUIColor.opacity(0.13), in: Capsule())
-            .overlay { Capsule().strokeBorder(label.color.swiftUIColor.opacity(0.28), lineWidth: 0.5) }
-            .fixedSize()
+        HStack(spacing: 3) {
+            Image(systemName: "tag.fill")
+                .font(.system(size: 7))
+            Text(text)
+                .lineLimit(1)
+                .truncationMode(.tail)
+        }
+        .font(.system(size: 8, weight: .semibold, design: .rounded))
+        .foregroundStyle(.secondary)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .background(.quaternary, in: Capsule())
+        .help(text)
     }
 }
 
 private struct QueryTabBar: View {
     @Bindable var store: AppStore
     let workspace: Workspace
+    @State private var queryToRename: QueryTab?
+    @State private var queryName = ""
+
     var body: some View {
         HStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -394,7 +413,9 @@ private struct QueryTabBar: View {
                         Button { store.selectQuery(tab.id) } label: {
                             HStack(spacing: 7) {
                                 Image(systemName: "doc.text")
-                                Text(tab.title).lineLimit(1)
+                                Text(tab.title)
+                                    .lineLimit(1)
+                                    .help("Control-click to rename")
                                 Button { store.closeQuery(tab.id) } label: { Image(systemName: "xmark").font(.system(size: 8, weight: .semibold)) }
                                     .buttonStyle(.plain).disabled(workspace.queryTabs.count == 1)
                             }
@@ -402,7 +423,14 @@ private struct QueryTabBar: View {
                             .foregroundStyle(tabColor)
                             .padding(.horizontal, 11).frame(height: 34)
                             .liquidGlass(isActive: isSelected, interactive: true, in: RoundedRectangle(cornerRadius: 9))
-                        }.buttonStyle(.plain)
+                        }
+                        .buttonStyle(.plain)
+                        .contextMenu {
+                            Button("Rename…") { beginRenaming(tab) }
+                            Divider()
+                            Button("Close Query") { store.closeQuery(tab.id) }
+                                .disabled(workspace.queryTabs.count == 1)
+                        }
                     }
                 }.padding(.horizontal, 7)
             }
@@ -411,6 +439,27 @@ private struct QueryTabBar: View {
                 .buttonStyle(.plain).foregroundStyle(.secondary).padding(.trailing, 7)
         }
         .frame(height: 42).background(.ultraThinMaterial.opacity(0.72)).overlay(alignment: .bottom) { Divider() }
+        .alert("Rename Query", isPresented: Binding(
+            get: { queryToRename != nil },
+            set: { if !$0 { queryToRename = nil } }
+        )) {
+            TextField("Query name", text: $queryName)
+            Button("Cancel", role: .cancel) { queryToRename = nil }
+            Button("Rename") {
+                if let queryToRename {
+                    store.renameQuery(queryToRename.id, to: queryName)
+                }
+                queryToRename = nil
+            }
+            .disabled(queryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        } message: {
+            Text("Choose a name for this query tab.")
+        }
+    }
+
+    private func beginRenaming(_ query: QueryTab) {
+        queryName = query.title
+        queryToRename = query
     }
 }
 
@@ -423,8 +472,14 @@ private struct QueryWorkspace: View {
             VStack(spacing: 0) {
                 EditorToolbar(store: store)
                 if let query = store.selectedQuery {
-                    SQLEditor(text: Binding(get: { query.sql }, set: store.updateQueryText))
-                        .id(query.id)
+                    SQLEditor(
+                        text: Binding(get: { query.sql }, set: store.updateQueryText),
+                        completionCatalog: SQLCompletionCatalog(
+                            schemas: store.completionSchemas,
+                            focusedSchema: query.schema
+                        )
+                    )
+                    .id(query.id)
                 } else { ContentUnavailableView("No Query", systemImage: "doc.text") }
             }.frame(minHeight: 230, idealHeight: 350)
             ResultsArea(
@@ -524,6 +579,7 @@ private struct ResultsArea: View {
                     store.selectResultRow(rowID)
                     showInspector = true
                 }
+                .id(result.id)
             }
             else if store.isExecuting { ProgressView("Executing query…").frame(maxWidth: .infinity, maxHeight: .infinity) }
             else { ContentUnavailableView("No Results", systemImage: "tablecells", description: Text("Run a query with Command-Return.")) }
@@ -566,7 +622,19 @@ private struct DynamicResultsGrid: View {
     let result: QueryResult
     let selectedRowID: Int?
     let selectRow: (Int) -> Void
-    private let width: CGFloat = 180
+    @StateObject private var layout: ResultGridLayout
+
+    init(
+        result: QueryResult,
+        selectedRowID: Int?,
+        selectRow: @escaping (Int) -> Void
+    ) {
+        self.result = result
+        self.selectedRowID = selectedRowID
+        self.selectRow = selectRow
+        _layout = StateObject(wrappedValue: ResultGridLayout(result: result))
+    }
+
     var body: some View {
         ScrollView([.horizontal, .vertical]) {
             LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
@@ -574,27 +642,31 @@ private struct DynamicResultsGrid: View {
                     ForEach(result.rows) { row in
                         ResultGridRow(
                             row: row,
-                            width: width,
+                            columnWidths: layout.columnWidths,
                             isSelected: row.id == selectedRowID,
                             select: { selectRow(row.id) }
                         )
                     }
                 } header: {
                     HStack(spacing: 0) {
-                        Text("").frame(width: 45)
-                        ForEach(Array(result.columns.enumerated()), id: \.offset) { _, column in
-                            Text(column).fontWeight(.semibold).frame(width: width, alignment: .leading).padding(.horizontal, 9)
+                        Text("").frame(width: 55)
+                        ForEach(Array(result.columns.enumerated()), id: \.offset) { index, column in
+                            Text(column)
+                                .fontWeight(.semibold)
+                                .frame(width: layout.columnWidths[index], alignment: .leading)
+                                .padding(.horizontal, 9)
                         }
                     }.frame(height: 30).background(.bar).overlay(alignment: .bottom) { Divider() }
                 }
             }.font(.system(size: 12))
         }
+        .defaultScrollAnchor(.topLeading)
     }
 }
 
 private struct ResultGridRow: View {
     let row: QueryResultRow
-    let width: CGFloat
+    let columnWidths: [CGFloat]
     let isSelected: Bool
     let select: () -> Void
 
@@ -604,8 +676,8 @@ private struct ResultGridRow: View {
                 .foregroundStyle(isSelected ? Color.accentColor : Color.secondary)
                 .frame(width: 45, alignment: .trailing)
                 .padding(.trailing, 10)
-            ForEach(Array(row.values.enumerated()), id: \.offset) { _, value in
-                ResultValueCell(value: value, width: width)
+            ForEach(Array(row.values.enumerated()), id: \.offset) { index, value in
+                ResultValueCell(value: value, width: columnWidths[index])
             }
         }
         .frame(height: 29)
@@ -620,6 +692,36 @@ private struct ResultGridRow: View {
         if isSelected { return Color.accentColor.opacity(0.16) }
         if row.id.isMultiple(of: 2) { return Color.primary.opacity(0.025) }
         return .clear
+    }
+}
+
+private final class ResultGridLayout: ObservableObject {
+    let columnWidths: [CGFloat]
+
+    init(result: QueryResult) {
+        let valueColumnCount = result.rows.reduce(0) { max($0, $1.values.count) }
+        let columnCount = max(result.columns.count, valueColumnCount)
+        let headerFont = NSFont.systemFont(ofSize: 12, weight: .semibold)
+        let valueFont = NSFont.systemFont(ofSize: 12)
+        var widths = Array(repeating: CGFloat.zero, count: columnCount)
+
+        for (index, column) in result.columns.enumerated() {
+            widths[index] = Self.textWidth(column, font: headerFont)
+        }
+        for row in result.rows {
+            for (index, value) in row.values.enumerated() {
+                widths[index] = max(widths[index], Self.textWidth(value, font: valueFont))
+            }
+        }
+
+        columnWidths = widths
+    }
+
+    private static func textWidth(_ value: String, font: NSFont) -> CGFloat {
+        (value as NSString)
+            .size(withAttributes: [.font: font])
+            .width
+            .rounded(.up)
     }
 }
 
@@ -807,7 +909,7 @@ struct ConnectionEditor: View {
                         )
                     }
                 } else {
-                    TextField("Wrangler executable", text: $draft.wranglerPath, prompt: Text("wrangler or /full/path/wrangler"))
+                    TextField("Wrangler executable", text: $draft.wranglerPath, prompt: Text("wrangler (auto-detected)"))
                     TextField("Auth profile", text: $draft.wranglerProfile, prompt: Text("Default authenticated profile"))
                     if connection == nil {
                         HStack {
@@ -938,12 +1040,6 @@ private struct DetailRow: View {
     let label: String
     let value: String
     var body: some View { HStack { Text(label).foregroundStyle(.secondary); Spacer(); Text(value).lineLimit(1).truncationMode(.middle) }.font(.system(size: 12)) }
-}
-
-private extension LabelColor {
-    var swiftUIColor: Color {
-        switch self { case .red: .red; case .orange: .orange; case .yellow: .yellow; case .green: .green; case .blue: .blue; case .purple: .purple; case .gray: .gray }
-    }
 }
 
 private extension View {
