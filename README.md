@@ -6,6 +6,8 @@ A native macOS SQL client built with SwiftUI, AppKit, Security, and Swift concur
 
 Published by **Pluto Labs**.
 
+**Website:** [defrimhasani.github.io/selektos](https://defrimhasani.github.io/selektos/)
+
 ## Open and run
 
 Open `Package.swift` in Xcode, select the `Selektos` scheme, and run the app.

@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title description">
+  <title id="title">Selektos database workspace</title>
+  <desc id="description">A dark native macOS workspace showing a connected PostgreSQL database, SQL query, result grid, and record inspector.</desc>
+  <defs>
+    <linearGradient id="toolbar" x1="0" x2="0" y1="0" y2="1">
+      <stop stop-color="#2c3648"/>
+      <stop offset="1" stop-color="#222b3b"/>
+    </linearGradient>
+    <linearGradient id="sidebar" x1="0" x2="1">
+      <stop stop-color="#1e2737"/>
+      <stop offset="1" stop-color="#192231"/>
+    </linearGradient>
+    <linearGradient id="editor" x1="0" x2="0" y1="0" y2="1">
+      <stop stop-color="#151e2d"/>
+      <stop offset="1" stop-color="#111927"/>
+    </linearGradient>
+    <linearGradient id="selected" x1="0" x2="1">
+      <stop stop-color="#213c69"/>
+      <stop offset="1" stop-color="#1a3157"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <style>
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { font-family: "SF Mono", "Cascadia Code", Menlo, monospace; }
+      .label { fill: #aab6c9; font-size: 15px; }
+      .small { fill: #8795aa; font-size: 12px; }
+      .tiny { fill: #718099; font-size: 10px; letter-spacing: .4px; }
+      .tree { fill: #c5d0df; font-size: 14px; }
+      .code { font-size: 16px; }
+      .grid { fill: #c7d1df; font-size: 13px; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#121a28"/>
+  <ellipse cx="1040" cy="210" rx="330" ry="220" fill="#497ef4" fill-opacity=".08" filter="url(#soft)"/>
+  <ellipse cx="1220" cy="780" rx="280" ry="180" fill="#a373ec" fill-opacity=".055" filter="url(#soft)"/>
+
+  <rect width="1600" height="54" fill="url(#toolbar)"/>
+  <rect y="53" width="1600" height="1" fill="#3b4659"/>
+  <text x="24" y="33" class="sans label" fill="#e0e8f5" font-weight="650">Selektos</text>
+  <rect x="119" y="17" width="136" height="23" rx="6" fill="#1b2433" stroke="#435168"/>
+  <text x="132" y="33" class="sans small" fill="#c3cee0">Atlas workspace</text>
+  <path d="M238 26l4 4 4-4" fill="none" stroke="#8796ab" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="1331" y="13" width="103" height="29" rx="7" fill="#5888ed"/>
+  <path d="M1347 22l7 5-7 5z" fill="#fff"/>
+  <text x="1363" y="32" class="sans small" fill="#fff" font-weight="650">Run Query</text>
+  <rect x="1445" y="13" width="112" height="29" rx="7" fill="#2e394c" stroke="#47556b"/>
+  <path d="M1461 22h9v10h-9zM1458 24h3v6h-3z" fill="none" stroke="#a5b5cd" stroke-width="1.2"/>
+  <text x="1478" y="32" class="sans small" fill="#cdd8e9">Inspector</text>
+
+  <rect y="54" width="306" height="946" fill="url(#sidebar)"/>
+  <rect x="305" y="54" width="1" height="946" fill="#344054"/>
+  <text x="21" y="86" class="sans tiny" font-weight="700">CONNECTIONS</text>
+  <rect x="18" y="101" width="270" height="30" rx="6" fill="#141c2a" stroke="#344156"/>
+  <circle cx="34" cy="116" r="5" fill="none" stroke="#718099" stroke-width="1.4"/>
+  <path d="M38 120l4 4" stroke="#718099" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="49" y="121" class="sans small">Filter connections</text>
+
+  <rect x="10" y="151" width="286" height="57" rx="7" fill="#263753"/>
+  <path d="M25 172h11v9H25zM27 168h7v4h-7z" fill="none" stroke="#86b5ff" stroke-width="1.5"/>
+  <circle cx="44" cy="166" r="3.5" fill="#5fd1a7"/>
+  <text x="55" y="172" class="sans tree" fill="#f1f6ff" font-weight="650">Production</text>
+  <text x="55" y="190" class="sans tiny">PostgreSQL  -  prod.internal:5432</text>
+  <path d="M273 170l5 5 5-5" fill="none" stroke="#9db8e8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M28 225l4 4 4-4" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M46 220h13v10H46z" fill="none" stroke="#d6ac73" stroke-width="1.5"/>
+  <text x="68" y="230" class="sans tree">app</text>
+  <rect x="244" y="218" width="34" height="15" rx="4" fill="#1d5949"/>
+  <text x="250" y="229" class="sans tiny" fill="#7ee2b7" font-size="8">ACTIVE</text>
+
+  <path d="M48 254l4 4 4-4" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M66 248h14l3 3v10H66z" fill="none" stroke="#ad9af1" stroke-width="1.4"/>
+  <text x="92" y="259" class="sans tree">public</text>
+  <text x="269" y="259" class="sans small">12</text>
+
+  <path d="M70 283l4 4 4-4" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M89 278h14v11H89z" fill="none" stroke="#7bb1fa" stroke-width="1.4"/>
+  <path d="M96 278v11M89 283h14" stroke="#7bb1fa" stroke-width="1.2"/>
+  <text x="113" y="288" class="sans tree" fill="#e8f1ff">customers</text>
+  <text x="269" y="288" class="sans small">8</text>
+
+  <path d="M94 311h7M97.5 307.5v7" stroke="#edca68" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="113" y="316" class="sans small">id</text>
+  <text x="244" y="316" class="mono tiny">uuid</text>
+  <path d="M94 338h7M97.5 334.5v7" stroke="#6f8098" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="113" y="343" class="sans small">email</text>
+  <text x="244" y="343" class="mono tiny">text</text>
+  <path d="M94 365h7M97.5 361.5v7" stroke="#6f8098" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="113" y="370" class="sans small">plan</text>
+  <text x="244" y="370" class="mono tiny">text</text>
+  <path d="M94 392h7M97.5 388.5v7" stroke="#6f8098" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="113" y="397" class="sans small">created_at</text>
+  <text x="220" y="397" class="mono tiny">timestamptz</text>
+
+  <path d="M70 424l4 4 4-4" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M89 419h14v11H89z" fill="none" stroke="#7bb1fa" stroke-width="1.4"/>
+  <path d="M96 419v11M89 424h14" stroke="#7bb1fa" stroke-width="1.2"/>
+  <text x="113" y="429" class="sans tree">invoices</text>
+  <text x="269" y="429" class="sans small">11</text>
+  <path d="M70 453l4 4 4-4" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M89 448h14v11H89z" fill="none" stroke="#7bb1fa" stroke-width="1.4"/>
+  <path d="M96 448v11M89 453h14" stroke="#7bb1fa" stroke-width="1.2"/>
+  <text x="113" y="458" class="sans tree">events</text>
+  <text x="269" y="458" class="sans small">14</text>
+
+  <rect x="10" y="492" width="286" height="57" rx="7" fill="#1a2332"/>
+  <path d="M25 513h11v9H25zM27 509h7v4h-7z" fill="none" stroke="#7f8da4" stroke-width="1.5"/>
+  <circle cx="44" cy="507" r="3.5" fill="#6d99ef"/>
+  <text x="55" y="513" class="sans tree">Analytics</text>
+  <text x="55" y="531" class="sans tiny">PostgreSQL  -  analytics.internal</text>
+  <path d="M273 511l5 5 5-5" fill="none" stroke="#8797ae" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="20" y="941" width="34" height="34" rx="7" fill="#263247"/>
+  <path d="M31 958h12M37 952v12" stroke="#aab9d0" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M270 950a10 10 0 1 1-7.1 2.9" fill="none" stroke="#8595ac" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M260 949h5v5" fill="none" stroke="#8595ac" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="306" y="54" width="1034" height="42" fill="#1d2635"/>
+  <rect x="320" y="63" width="170" height="27" rx="7" fill="#2b3a54"/>
+  <path d="M337 71h11v11H337zM339 68h7v3h-7z" fill="none" stroke="#8ab5ff" stroke-width="1.3"/>
+  <text x="358" y="81" class="sans small" fill="#e7eefb">Customer activity</text>
+  <path d="M473 72l8 8M481 72l-8 8" stroke="#93a6c4" stroke-width="1.4" stroke-linecap="round"/>
+  <rect x="499" y="63" width="130" height="27" rx="7" fill="#202a39"/>
+  <path d="M516 71h11v11H516zM518 68h7v3h-7z" fill="none" stroke="#7a899f" stroke-width="1.3"/>
+  <text x="537" y="81" class="sans small">Untitled query</text>
+  <path d="M1208 69h12M1214 63v12" stroke="#93a3ba" stroke-width="1.5" stroke-linecap="round"/>
+
+  <rect x="306" y="96" width="1034" height="43" fill="#17202f"/>
+  <rect x="321" y="104" width="83" height="27" rx="6" fill="#4e80df"/>
+  <path d="M337 112l8 5-8 5z" fill="#fff"/>
+  <text x="353" y="122" class="sans small" fill="#fff" font-weight="650">Run</text>
+  <rect x="414" y="104" width="31" height="27" rx="6" fill="#253145" stroke="#3b485e"/>
+  <path d="M425 112h8v9h-8z" fill="#93a4bb"/>
+  <circle cx="465" cy="117" r="3.2" fill="#5fd1a7"/>
+  <text x="476" y="121" class="sans small">Ready</text>
+  <rect x="1014" y="104" width="120" height="27" rx="6" fill="#202b3d" stroke="#39485f"/>
+  <path d="M1028 112h10v9h-10zM1030 109h6v3h-6z" fill="none" stroke="#9aaac2" stroke-width="1.2"/>
+  <text x="1047" y="121" class="sans small">Production</text>
+  <path d="M1115 114l4 4 4-4" fill="none" stroke="#9aaac2" stroke-width="1.3"/>
+  <rect x="1143" y="104" width="79" height="27" rx="6" fill="#202b3d" stroke="#39485f"/>
+  <text x="1155" y="121" class="sans small">app</text>
+  <path d="M1204 114l4 4 4-4" fill="none" stroke="#9aaac2" stroke-width="1.3"/>
+  <rect x="1231" y="104" width="94" height="27" rx="6" fill="#202b3d" stroke="#39485f"/>
+  <text x="1244" y="121" class="sans small">public</text>
+  <path d="M1308 114l4 4 4-4" fill="none" stroke="#9aaac2" stroke-width="1.3"/>
+
+  <rect x="306" y="139" width="1034" height="302" fill="url(#editor)"/>
+  <rect x="306" y="139" width="44" height="302" fill="#111927"/>
+  <text x="322" y="185" class="mono small" fill="#536278">1</text>
+  <text x="322" y="217" class="mono small" fill="#536278">2</text>
+  <text x="322" y="249" class="mono small" fill="#536278">3</text>
+  <text x="322" y="281" class="mono small" fill="#536278">4</text>
+  <text x="322" y="313" class="mono small" fill="#536278">5</text>
+  <text x="322" y="345" class="mono small" fill="#536278">6</text>
+  <text x="322" y="377" class="mono small" fill="#536278">7</text>
+  <text x="322" y="409" class="mono small" fill="#536278">8</text>
+  <text x="370" y="185" class="mono code" fill="#c9a6ff">SELECT</text>
+  <text x="438" y="185" class="mono code" fill="#cfdae9">c.id, c.email, c.plan, c.created_at</text>
+  <text x="370" y="217" class="mono code" fill="#c9a6ff">FROM</text>
+  <text x="417" y="217" class="mono code" fill="#85c9ff">public.customers</text>
+  <text x="370" y="249" class="mono code" fill="#c9a6ff">WHERE</text>
+  <text x="425" y="249" class="mono code" fill="#cfdae9">c.status = </text>
+  <text x="526" y="249" class="mono code" fill="#f0bc85">'active'</text>
+  <text x="370" y="281" class="mono code" fill="#c9a6ff">ORDER BY</text>
+  <text x="448" y="281" class="mono code" fill="#cfdae9">c.created_at </text>
+  <text x="561" y="281" class="mono code" fill="#c9a6ff">DESC</text>
+  <text x="370" y="313" class="mono code" fill="#c9a6ff">LIMIT</text>
+  <text x="425" y="313" class="mono code" fill="#f1cb7b">100</text>
+  <text x="454" y="313" class="mono code" fill="#cfdae9">;</text>
+  <rect x="370" y="324" width="3" height="21" rx="1.5" fill="#83b3ff"/>
+  <text x="370" y="398" class="mono tiny" fill="#5f6f87">Command-Return to run</text>
+
+  <rect x="306" y="441" width="1034" height="559" fill="#141d2c"/>
+  <rect x="306" y="441" width="1034" height="43" fill="#1a2434"/>
+  <text x="323" y="468" class="sans small" fill="#f0f5fe" font-weight="650">Results</text>
+  <rect x="321" y="480" width="48" height="2" rx="1" fill="#76a9ff"/>
+  <text x="388" y="468" class="sans small">Messages</text>
+  <text x="1165" y="468" class="sans small">8,422 rows in 24 ms</text>
+  <rect x="306" y="484" width="1034" height="32" fill="#202b3b"/>
+  <path d="M361 484v516M504 484v516M742 484v516M928 484v516M1136 484v516" stroke="#304057" stroke-width="1"/>
+  <text x="324" y="505" class="sans tiny" fill="#99a9c0" text-anchor="end">#</text>
+  <text x="374" y="505" class="sans small" fill="#d4deec" font-weight="650">id</text>
+  <text x="519" y="505" class="sans small" fill="#d4deec" font-weight="650">email</text>
+  <text x="757" y="505" class="sans small" fill="#d4deec" font-weight="650">plan</text>
+  <text x="943" y="505" class="sans small" fill="#d4deec" font-weight="650">created_at</text>
+  <text x="1151" y="505" class="sans small" fill="#d4deec" font-weight="650">status</text>
+  <rect x="306" y="516" width="1034" height="32" fill="#18253a"/>
+  <rect x="306" y="548" width="1034" height="32" fill="#151e2d"/>
+  <rect x="306" y="580" width="1034" height="32" fill="url(#selected)"/>
+  <rect x="306" y="612" width="1034" height="32" fill="#151e2d"/>
+  <rect x="306" y="644" width="1034" height="32" fill="#18253a"/>
+  <rect x="306" y="676" width="1034" height="32" fill="#151e2d"/>
+  <rect x="306" y="708" width="1034" height="32" fill="#18253a"/>
+  <rect x="306" y="740" width="1034" height="32" fill="#151e2d"/>
+  <rect x="306" y="772" width="1034" height="32" fill="#18253a"/>
+  <rect x="306" y="804" width="1034" height="32" fill="#151e2d"/>
+  <g class="sans grid">
+    <text x="340" y="537" fill="#8090a7">1</text><text x="375" y="537">4a63bf16</text><text x="519" y="537">ava.chen@northstar.io</text><text x="757" y="537">Enterprise</text><text x="943" y="537">2026-08-31 09:41:12</text><text x="1151" y="537" fill="#73d6ae">active</text>
+    <text x="340" y="569" fill="#8090a7">2</text><text x="375" y="569">dd17a004</text><text x="519" y="569">miles@woodland.co</text><text x="757" y="569">Pro</text><text x="943" y="569">2026-08-31 09:18:43</text><text x="1151" y="569" fill="#73d6ae">active</text>
+    <text x="340" y="601" fill="#8eb7ff">3</text><text x="375" y="601" fill="#e7f0ff">e1b0582a</text><text x="519" y="601" fill="#e7f0ff">noah@daybreak.studio</text><text x="757" y="601" fill="#e7f0ff">Team</text><text x="943" y="601" fill="#e7f0ff">2026-08-31 08:55:29</text><text x="1151" y="601" fill="#80dfb9">active</text>
+    <text x="340" y="633" fill="#8090a7">4</text><text x="375" y="633">ab2d9e70</text><text x="519" y="633">finley@copper.dev</text><text x="757" y="633">Pro</text><text x="943" y="633">2026-08-31 08:43:08</text><text x="1151" y="633" fill="#73d6ae">active</text>
+    <text x="340" y="665" fill="#8090a7">5</text><text x="375" y="665">61f24c5d</text><text x="519" y="665">mia@paperplane.app</text><text x="757" y="665">Starter</text><text x="943" y="665">2026-08-31 08:40:12</text><text x="1151" y="665" fill="#73d6ae">active</text>
+    <text x="340" y="697" fill="#8090a7">6</text><text x="375" y="697">b945811f</text><text x="519" y="697">leo@yellowbrick.io</text><text x="757" y="697">Enterprise</text><text x="943" y="697">2026-08-31 08:29:01</text><text x="1151" y="697" fill="#73d6ae">active</text>
+    <text x="340" y="729" fill="#8090a7">7</text><text x="375" y="729">c8d95f3a</text><text x="519" y="729">ivy@northstar.io</text><text x="757" y="729">Team</text><text x="943" y="729">2026-08-31 08:11:48</text><text x="1151" y="729" fill="#73d6ae">active</text>
+    <text x="340" y="761" fill="#8090a7">8</text><text x="375" y="761">739e1c8b</text><text x="519" y="761">zoe@strand.design</text><text x="757" y="761">Pro</text><text x="943" y="761">2026-08-31 07:56:38</text><text x="1151" y="761" fill="#73d6ae">active</text>
+    <text x="340" y="793" fill="#8090a7">9</text><text x="375" y="793">203dbfa6</text><text x="519" y="793">liam@orbit.company</text><text x="757" y="793">Starter</text><text x="943" y="793">2026-08-31 07:44:19</text><text x="1151" y="793" fill="#73d6ae">active</text>
+  </g>
+
+  <rect x="1340" y="54" width="260" height="946" fill="#192332"/>
+  <rect x="1339" y="54" width="1" height="946" fill="#344054"/>
+  <text x="1360" y="87" class="sans label" fill="#e4ecfa" font-weight="650">Inspector</text>
+  <text x="1538" y="87" class="sans tiny">Row 3</text>
+  <rect x="1340" y="102" width="260" height="1" fill="#354156"/>
+  <text x="1360" y="136" class="sans tiny" fill="#8392a8" font-weight="700">SELECTED ROW</text>
+  <text x="1360" y="168" class="sans tiny">ID</text>
+  <text x="1360" y="187" class="mono small" fill="#dbe5f3">e1b0582a-92e4...</text>
+  <text x="1360" y="222" class="sans tiny">EMAIL</text>
+  <text x="1360" y="241" class="sans small" fill="#dbe5f3">noah@daybreak.studio</text>
+  <text x="1360" y="276" class="sans tiny">PLAN</text>
+  <rect x="1360" y="288" width="44" height="19" rx="5" fill="#382e5d"/>
+  <text x="1371" y="301" class="sans tiny" fill="#c8b7ff">TEAM</text>
+  <text x="1360" y="342" class="sans tiny" fill="#8392a8" font-weight="700">EXECUTION</text>
+  <text x="1360" y="374" class="sans small">Duration</text><text x="1555" y="374" class="sans small" fill="#dbe5f3" text-anchor="end">24 ms</text>
+  <text x="1360" y="405" class="sans small">Rows</text><text x="1555" y="405" class="sans small" fill="#dbe5f3" text-anchor="end">8,422</text>
+  <text x="1360" y="436" class="sans small">Command</text><text x="1555" y="436" class="sans small" fill="#dbe5f3" text-anchor="end">SELECT</text>
+  <text x="1360" y="490" class="sans tiny" fill="#8392a8" font-weight="700">CONNECTION</text>
+  <text x="1360" y="522" class="sans small">Name</text><text x="1555" y="522" class="sans small" fill="#dbe5f3" text-anchor="end">Production</text>
+  <text x="1360" y="553" class="sans small">Provider</text><text x="1555" y="553" class="sans small" fill="#dbe5f3" text-anchor="end">PostgreSQL</text>
+  <text x="1360" y="584" class="sans small">Database</text><text x="1555" y="584" class="sans small" fill="#dbe5f3" text-anchor="end">app</text>
+  <text x="1360" y="615" class="sans small">TLS</text><text x="1555" y="615" class="sans small" fill="#dbe5f3" text-anchor="end">Require</text>
+</svg>

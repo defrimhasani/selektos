@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" role="img" aria-labelledby="title description">
+  <title id="title">Selektos MCP Server settings</title>
+  <desc id="description">A dark settings screen with MCP Server selected, showing access controls, client configuration, and database tools exposed to local AI agents.</desc>
+  <defs>
+    <linearGradient id="window" x1="0" x2="0" y1="0" y2="1">
+      <stop stop-color="#202b3b"/>
+      <stop offset="1" stop-color="#182232"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#273348"/>
+      <stop offset="1" stop-color="#202c3e"/>
+    </linearGradient>
+    <style>
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { font-family: "SF Mono", "Cascadia Code", Menlo, monospace; }
+      .label { fill: #c9d5e7; font-size: 14px; }
+      .small { fill: #9caac0; font-size: 12px; }
+      .tiny { fill: #73829a; font-size: 10px; letter-spacing: .25px; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="900" fill="#121a27"/>
+  <rect width="1280" height="46" fill="url(#window)"/>
+  <rect y="45" width="1280" height="1" fill="#3b485c"/>
+  <text x="22" y="29" class="sans label" fill="#e7eefb" font-weight="650">Settings</text>
+  <text x="595" y="29" class="sans small" fill="#b8c5da">Selektos</text>
+
+  <rect y="46" width="255" height="854" fill="#1b2534"/>
+  <rect x="254" y="46" width="1" height="854" fill="#354258"/>
+  <text x="20" y="83" class="sans tiny" font-weight="700">SETTINGS</text>
+
+  <path d="M26 109a8 8 0 1 0 0 .1M20 109h12M26 103v12" fill="none" stroke="#8493a9" stroke-width="1.5" stroke-linecap="round"/>
+  <text x="48" y="114" class="sans label">General</text>
+  <path d="M22 146l4-4 4 4-4 4zM34 143h6M34 149h6" fill="none" stroke="#8493a9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="48" y="151" class="sans label">Appearance</text>
+  <path d="M20 178h14v13H20zM23 175h8v3h-8z" fill="none" stroke="#8493a9" stroke-width="1.4"/>
+  <text x="48" y="184" class="sans label">Workspaces</text>
+  <path d="M21 211h12v12H21zM24 207h6v4h-6z" fill="none" stroke="#8493a9" stroke-width="1.4"/>
+  <text x="48" y="219" class="sans label">Connections</text>
+
+  <rect x="12" y="239" width="231" height="37" rx="7" fill="#304a76"/>
+  <path d="M21 258c5-10 9-10 14 0M21 258h14M23 251h10" fill="none" stroke="#a8c7ff" stroke-width="1.5" stroke-linecap="round"/>
+  <text x="48" y="263" class="sans label" fill="#f0f5ff" font-weight="620">MCP Server</text>
+  <circle cx="221" cy="257" r="4" fill="#6dd6ab"/>
+  <path d="M22 305h12v12H22zM25 302h6v3h-6z" fill="none" stroke="#8493a9" stroke-width="1.4"/>
+  <text x="48" y="313" class="sans label">About</text>
+
+  <rect x="255" y="46" width="1025" height="854" fill="#151f2e"/>
+  <ellipse cx="1078" cy="190" rx="260" ry="210" fill="#7b68e4" fill-opacity=".06"/>
+  <text x="299" y="97" class="sans label" fill="#eff4ff" font-size="26" font-weight="700">MCP Server</text>
+  <text x="299" y="124" class="sans small" fill="#9eacc3">Let local AI agents query connections saved in Selektos.</text>
+
+  <rect x="299" y="157" width="937" height="174" rx="10" fill="url(#card)" stroke="#3c4b64"/>
+  <text x="324" y="189" class="sans label" fill="#e7eefb" font-weight="680">Access</text>
+  <text x="324" y="224" class="sans label">Enable MCP server</text>
+  <rect x="1158" y="207" width="49" height="27" rx="13.5" fill="#5f91f0"/>
+  <circle cx="1193" cy="220.5" r="10.5" fill="#fff"/>
+  <text x="324" y="248" class="sans small">The stdio server runs only when an MCP client launches it.</text>
+  <rect x="324" y="266" width="887" height="1" fill="#44536b"/>
+  <text x="324" y="297" class="sans label">Read-only access</text>
+  <rect x="1158" y="279" width="49" height="27" rx="13.5" fill="#5f91f0"/>
+  <circle cx="1193" cy="292.5" r="10.5" fill="#fff"/>
+  <path d="M527 285h11v10H527zM529 282h7v4h-7z" fill="none" stroke="#71d8af" stroke-width="1.2"/>
+  <text x="549" y="301" class="sans small" fill="#b9c8dd">Mutating SQL is rejected and PostgreSQL queries run in a read-only transaction.</text>
+
+  <rect x="299" y="350" width="937" height="108" rx="10" fill="url(#card)" stroke="#3c4b64"/>
+  <text x="324" y="382" class="sans label" fill="#e7eefb" font-weight="680">Query results</text>
+  <text x="324" y="419" class="sans label">Maximum rows returned per tool call</text>
+  <rect x="1014" y="397" width="193" height="30" rx="6" fill="#192434" stroke="#506079"/>
+  <text x="1029" y="417" class="sans small" fill="#d9e3f1">1,000</text>
+  <path d="M1187 409l5 5 5-5" fill="none" stroke="#9fafc7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="324" y="445" class="sans tiny">Agents can request fewer rows, but cannot exceed this limit.</text>
+
+  <rect x="299" y="477" width="937" height="225" rx="10" fill="url(#card)" stroke="#3c4b64"/>
+  <text x="324" y="509" class="sans label" fill="#e7eefb" font-weight="680">Client configuration</text>
+  <rect x="324" y="527" width="887" height="122" rx="7" fill="#111927" stroke="#3c4b64"/>
+  <g class="mono" font-size="11">
+    <text x="344" y="550" fill="#7d8da5">{</text>
+    <text x="360" y="571" fill="#a9bcff">"mcpServers"</text><text x="445" y="571" fill="#7d8da5">: {</text>
+    <text x="378" y="592" fill="#a9bcff">"selektos"</text><text x="447" y="592" fill="#7d8da5">: {</text>
+    <text x="396" y="613" fill="#a9bcff">"command"</text><text x="464" y="613" fill="#7d8da5">: </text><text x="478" y="613" fill="#87ddb8">"/Applications/Selektos.app/Contents/MacOS/Selektos"</text><text x="810" y="613" fill="#7d8da5">,</text>
+    <text x="396" y="634" fill="#a9bcff">"args"</text><text x="443" y="634" fill="#7d8da5">: [</text><text x="461" y="634" fill="#87ddb8">"--mcp-server"</text><text x="550" y="634" fill="#7d8da5">]</text>
+  </g>
+  <rect x="1046" y="662" width="165" height="26" rx="6" fill="#4f80df"/>
+  <path d="M1060 671h9v9h-9zM1057 673h3v5h-3z" fill="none" stroke="#fff" stroke-width="1.2"/>
+  <text x="1077" y="680" class="sans small" fill="#fff" font-weight="650">Copy Configuration</text>
+
+  <rect x="299" y="721" width="937" height="148" rx="10" fill="url(#card)" stroke="#3c4b64"/>
+  <text x="324" y="753" class="sans label" fill="#e7eefb" font-weight="680">Exposed connections</text>
+  <circle cx="340" cy="785" r="10" fill="#285a9c"/>
+  <path d="M335 781h10v8h-10zM337 778h6v3h-6z" fill="none" stroke="#a7c8ff" stroke-width="1.3"/>
+  <text x="361" y="783" class="sans label" fill="#e2eaf7" font-weight="620">Production</text>
+  <text x="361" y="801" class="sans tiny">Atlas workspace  -  PostgreSQL  -  prod.internal:5432/app</text>
+  <text x="361" y="822" class="mono tiny" fill="#9fb5db">list_tables_production  describe_table_production  preview_table_production  query_production</text>
+  <circle cx="340" cy="843" r="3.5" fill="#6ed6ad"/>
+  <text x="351" y="847" class="sans tiny" fill="#8fbcaa">Credentials remain in macOS Keychain and are never included in tool metadata.</text>
+</svg>
