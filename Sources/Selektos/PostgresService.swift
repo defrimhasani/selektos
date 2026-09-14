@@ -1,4 +1,5 @@
 import Foundation
+import Logging
 import PostgresNIO
 
 struct PostgresService: Sendable {
@@ -7,31 +8,91 @@ struct PostgresService: Sendable {
         connection: DatabaseConnection,
         password: String,
         searchPath: String? = nil,
-        maximumRows: Int = 10_000
+        maximumRows: Int = 10_000,
+        readOnly: Bool = false
     ) async throws -> QueryResult {
         let clock = ContinuousClock()
         let start = clock.now
-        let client = makeClient(connection: connection, password: password, searchPath: searchPath)
+        let client = makeClient(
+            connection: connection,
+            password: password,
+            searchPath: searchPath,
+            readOnly: readOnly
+        )
         let runTask = Task { await client.run() }
         defer { runTask.cancel() }
 
         try Task.checkCancellation()
+        if readOnly {
+            return try await client.withConnection { connection in
+                _ = try await connection.query(
+                    PostgresQuery(unsafeSQL: "BEGIN TRANSACTION READ ONLY;"),
+                    logger: Self.logger
+                )
+                do {
+                    let sequence = try await connection.query(
+                        PostgresQuery(unsafeSQL: sql),
+                        logger: Self.logger
+                    )
+                    let result = try await collect(
+                        sequence,
+                        sql: sql,
+                        start: start,
+                        maximumRows: maximumRows
+                    )
+                    _ = try await connection.query(
+                        PostgresQuery(unsafeSQL: "ROLLBACK;"),
+                        logger: Self.logger
+                    )
+                    return result
+                } catch {
+                    let queryError = error
+                    do {
+                        _ = try await connection.query(
+                            PostgresQuery(unsafeSQL: "ROLLBACK;"),
+                            logger: Self.logger
+                        )
+                    } catch {
+                        throw PostgresReadOnlyCleanupError(
+                            queryError: queryError,
+                            rollbackError: error
+                        )
+                    }
+                    throw queryError
+                }
+            }
+        }
+
         let sequence = try await client.query(PostgresQuery(unsafeSQL: sql))
+        return try await collect(sequence, sql: sql, start: start, maximumRows: maximumRows)
+    }
+
+    private func collect(
+        _ sequence: PostgresRowSequence,
+        sql: String,
+        start: ContinuousClock.Instant,
+        maximumRows: Int
+    ) async throws -> QueryResult {
         let columns = sequence.columns.map(\.name)
         var rows: [QueryResultRow] = []
         rows.reserveCapacity(min(maximumRows, 500))
+        var wasTruncated = false
 
         for try await row in sequence {
             try Task.checkCancellation()
-            guard rows.count < maximumRows else { continue }
-            rows.append(QueryResultRow(id: rows.count, values: row.map(displayValue)))
+            if rows.count < maximumRows {
+                rows.append(QueryResultRow(id: rows.count, values: row.map(displayValue)))
+            } else {
+                wasTruncated = true
+            }
         }
 
         return QueryResult(
             columns: columns,
             rows: rows,
             command: commandName(from: sql),
-            duration: start.duration(to: clock.now)
+            duration: start.duration(to: ContinuousClock().now),
+            wasTruncated: wasTruncated
         )
     }
 
@@ -108,7 +169,8 @@ struct PostgresService: Sendable {
     private func makeClient(
         connection: DatabaseConnection,
         password: String,
-        searchPath: String? = nil
+        searchPath: String? = nil,
+        readOnly: Bool = false
     ) -> PostgresClient {
         let tls: PostgresClient.Configuration.TLS
         switch connection.tlsMode {
@@ -127,11 +189,21 @@ struct PostgresService: Sendable {
             database: connection.database,
             tls: tls
         )
+        var startupParameters: [(String, String)] = []
         if let value = Self.searchPathValue(for: searchPath) {
-            configuration.options.additionalStartupParameters = [("search_path", value)]
+            startupParameters.append(("search_path", value))
         }
+        if readOnly {
+            startupParameters.append(("default_transaction_read_only", "on"))
+        }
+        configuration.options.additionalStartupParameters = startupParameters
         return PostgresClient(configuration: configuration)
     }
+
+    private static let logger = Logger(
+        label: "com.plutolabs.selektos.postgresql",
+        factory: { _ in SwiftLogNoOpLogHandler() }
+    )
 
     /// Builds a `search_path` value that resolves unqualified names in the focused
     /// schema first while keeping `public` reachable. Returns `nil` when no schema
@@ -181,5 +253,14 @@ struct PostgresService: Sendable {
         sql.trimmingCharacters(in: .whitespacesAndNewlines)
             .split(whereSeparator: { $0.isWhitespace || $0 == ";" })
             .first.map { String($0).uppercased() } ?? "QUERY"
+    }
+}
+
+private struct PostgresReadOnlyCleanupError: LocalizedError {
+    let queryError: Error
+    let rollbackError: Error
+
+    var errorDescription: String? {
+        "The read-only query failed (\(queryError.localizedDescription)), and its transaction could not be rolled back (\(rollbackError.localizedDescription))."
     }
 }

@@ -2,6 +2,29 @@ import XCTest
 @testable import Selektos
 
 final class WranglerExecutableResolverTests: XCTestCase {
+    func testProcessCapturesOutputLargerThanPipeBuffer() async throws {
+        let output = try await WranglerProcess.run(
+            path: "/usr/bin/python3",
+            arguments: ["-c", "print('x' * 200000)"],
+            timeout: .seconds(5)
+        )
+
+        XCTAssertGreaterThan(output.count, 200_000)
+    }
+
+    func testProcessTimesOutWithoutHanging() async {
+        do {
+            _ = try await WranglerProcess.run(
+                path: "/usr/bin/python3",
+                arguments: ["-c", "import time; time.sleep(5)"],
+                timeout: .milliseconds(100)
+            )
+            XCTFail("Expected the process to time out.")
+        } catch {
+            XCTAssertTrue(error.localizedDescription.contains("did not finish"))
+        }
+    }
+
     func testFindsWranglerInNewestNVMNodeInstallation() throws {
         let homeDirectory = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)

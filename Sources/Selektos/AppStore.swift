@@ -21,7 +21,7 @@ final class AppStore {
     var discoveredPostgres: [DiscoveredPostgres] = []
     var isDiscoveringPostgres = false
 
-    private let persistence: PersistenceStore?
+    private let persistence: AppStatePersistence?
     private let postgres = PostgresService()
     private let postgresDiscovery = PostgresDiscoveryService()
     private let d1 = D1Service()
@@ -30,7 +30,7 @@ final class AppStore {
 
     init(initialState: AppState? = nil, persistsState: Bool = true) {
         AppPreferences.registerDefaults()
-        let persistence = persistsState ? PersistenceStore() : nil
+        let persistence = persistsState ? AppStatePersistence() : nil
         self.persistence = persistence
         state = initialState ?? persistence?.load() ?? .initial
         if !UserDefaults.standard.bool(forKey: AppPreferences.restoreLastWorkspaceKey) {
@@ -441,11 +441,9 @@ final class AppStore {
         selectConnection(connectionID)
         let escapedSchema = table.schema.replacingOccurrences(of: "\"", with: "\"\"")
         let escapedTable = table.name.replacingOccurrences(of: "\"", with: "\"\"")
-        addQuery(
-            sql: "SELECT *\nFROM \"\(escapedSchema)\".\"\(escapedTable)\"\nLIMIT 100;",
-            title: table.name,
-            schema: table.schema
-        )
+        updateQueryText("SELECT *\nFROM \"\(escapedSchema)\".\"\(escapedTable)\"\nLIMIT 100;")
+        selectSchema(table.schema)
+        runQuery()
     }
 
     func discoverD1Databases(path: String, profile: String) {
@@ -529,25 +527,5 @@ final class AppStore {
 
     private func save() {
         try? persistence?.save(state)
-    }
-}
-
-private struct PersistenceStore {
-    private var fileURL: URL? {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
-            .appending(path: "Selektos", directoryHint: .isDirectory)
-            .appending(path: "workspaces.json")
-    }
-
-    func load() -> AppState? {
-        guard let fileURL, let data = try? Data(contentsOf: fileURL) else { return nil }
-        return try? JSONDecoder().decode(AppState.self, from: data)
-    }
-
-    func save(_ state: AppState) throws {
-        guard let fileURL else { return }
-        try FileManager.default.createDirectory(at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-        let data = try JSONEncoder().encode(state)
-        try data.write(to: fileURL, options: .atomic)
     }
 }

@@ -1,7 +1,25 @@
 import AppKit
+import Darwin
 import SwiftUI
 
 @main
+enum SelektosLauncher {
+    @MainActor
+    static func main() async {
+        if CommandLine.arguments.dropFirst().contains("--mcp-server") {
+            do {
+                try await MCPServerCommand.run()
+            } catch {
+                let message = "Selektos MCP server failed: \(error.localizedDescription)\n"
+                FileHandle.standardError.write(Data(message.utf8))
+                Darwin.exit(EXIT_FAILURE)
+            }
+        } else {
+            SelektosApp.main()
+        }
+    }
+}
+
 struct SelektosApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var store = AppStore()

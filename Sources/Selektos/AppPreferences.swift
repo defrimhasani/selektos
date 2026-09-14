@@ -51,6 +51,7 @@ enum AppPreferences {
             defaultQueryKey: defaultQuery,
             selectedSettingsPaneKey: "general"
         ])
+        MCPPreferences.registerDefaults()
     }
 
     static var resultRowLimit: Int {

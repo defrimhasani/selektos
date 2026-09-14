@@ -231,9 +231,13 @@ private struct Sidebar: View {
                                                             }.contentShape(Rectangle())
                                                         }
                                                         .buttonStyle(.plain).padding(.leading, 54)
-                                                        .contextMenu { Button("Open in New Query") {
-                                                            store.selectDatabase(database, for: connection.id)
-                                                            store.queryTable(table, connectionID: connection.id)
+                                                        .simultaneousGesture(
+                                                            TapGesture(count: 2).onEnded {
+                                                                openTable(connection, database, table)
+                                                            }
+                                                        )
+                                                        .contextMenu { Button("Open Data") {
+                                                            openTable(connection, database, table)
                                                         } }
 
                                                         if expandedTables.contains(tableKey(connection.id, database, table)) {
@@ -317,6 +321,11 @@ private struct Sidebar: View {
         let key = tableKey(connectionID, database, table)
         if expandedTables.contains(key) { expandedTables.remove(key) }
         else { expandedTables.insert(key) }
+    }
+
+    private func openTable(_ connection: DatabaseConnection, _ database: String, _ table: DatabaseTable) {
+        store.selectDatabase(database, for: connection.id)
+        store.queryTable(table, connectionID: connection.id)
     }
 
     private func isSystemSchema(_ name: String) -> Bool {

@@ -31,7 +31,13 @@ struct D1Service: Sendable {
         }
         let duration = batch.meta?.duration.map { Duration.milliseconds(Int64($0.rounded())) }
             ?? start.duration(to: clock.now)
-        return QueryResult(columns: columns, rows: rows, command: commandName(sql), duration: duration)
+        return QueryResult(
+            columns: columns,
+            rows: rows,
+            command: commandName(sql),
+            duration: duration,
+            wasTruncated: batch.results.count > maximumRows
+        )
     }
 
     func fetchSchema(connection: DatabaseConnection) async throws -> [DatabaseSchema] {
@@ -354,8 +360,31 @@ struct WranglerExecutableResolver {
     }
 }
 
-private enum WranglerProcess {
-    static func run(path: String, arguments: [String]) async throws -> Data {
+enum WranglerProcess {
+    static func run(
+        path: String,
+        arguments: [String],
+        timeout: Duration = .seconds(45)
+    ) async throws -> Data {
+        try await withThrowingTaskGroup(of: Data.self) { group in
+            group.addTask {
+                try await launch(path: path, arguments: arguments)
+            }
+            group.addTask {
+                try await Task.sleep(for: timeout)
+                throw D1Error.message(
+                    "Wrangler did not finish within \(timeout.components.seconds) seconds."
+                )
+            }
+            defer { group.cancelAll() }
+            guard let result = try await group.next() else {
+                throw D1Error.message("Wrangler stopped without returning a result.")
+            }
+            return result
+        }
+    }
+
+    private static func launch(path: String, arguments: [String]) async throws -> Data {
         let resolver = WranglerExecutableResolver()
         let executable = try resolver.resolve(path)
         let process = Process()
@@ -365,24 +394,49 @@ private enum WranglerProcess {
         process.arguments = arguments
         process.standardOutput = output
         process.standardError = errors
+        process.standardInput = FileHandle.nullDevice
         process.environment = resolver.processEnvironment(for: executable)
+        process.environment?["CI"] = "1"
+        process.environment?["WRANGLER_SEND_METRICS"] = "false"
 
         return try await withTaskCancellationHandler {
-            try await withCheckedThrowingContinuation { continuation in
+            let stdoutTask = Task.detached(priority: .utility) {
+                output.fileHandleForReading.readDataToEndOfFile()
+            }
+            let stderrTask = Task.detached(priority: .utility) {
+                errors.fileHandleForReading.readDataToEndOfFile()
+            }
+
+            return try await withCheckedThrowingContinuation { continuation in
                 process.terminationHandler = { process in
-                    let stdout = output.fileHandleForReading.readDataToEndOfFile()
-                    let stderr = errors.fileHandleForReading.readDataToEndOfFile()
-                    if process.terminationStatus == 0 {
-                        continuation.resume(returning: stdout)
-                    } else {
-                        let failureOutput = stderr.isEmpty ? stdout : stderr
-                        continuation.resume(
-                            throwing: D1Error.message(WranglerErrorFormatter.message(from: failureOutput))
-                        )
+                    Task {
+                        let stdout = await stdoutTask.value
+                        let stderr = await stderrTask.value
+                        if process.terminationStatus == 0 {
+                            continuation.resume(returning: stdout)
+                        } else {
+                            let failureOutput = stderr.isEmpty ? stdout : stderr
+                            continuation.resume(
+                                throwing: D1Error.message(
+                                    WranglerErrorFormatter.message(from: failureOutput)
+                                )
+                            )
+                        }
                     }
                 }
-                do { try process.run() }
-                catch { continuation.resume(throwing: D1Error.message("Could not launch Wrangler at \(executable.path): \(error.localizedDescription)")) }
+                do {
+                    try process.run()
+                    output.fileHandleForWriting.closeFile()
+                    errors.fileHandleForWriting.closeFile()
+                } catch {
+                    output.fileHandleForWriting.closeFile()
+                    errors.fileHandleForWriting.closeFile()
+                    continuation.resume(
+                        throwing: D1Error.message(
+                            "Could not launch Wrangler at \(executable.path): \(error.localizedDescription)"
+                        )
+                    )
+                }
             }
         } onCancel: {
             if process.isRunning { process.terminate() }

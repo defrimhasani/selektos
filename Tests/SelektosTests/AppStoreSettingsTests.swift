@@ -100,6 +100,37 @@ final class AppStoreSettingsTests: XCTestCase {
         XCTAssertEqual(store.selectedQuery?.sql, "SELECT 42;")
     }
 
+    func testOpeningTableRunsLimitedQueryInCurrentTab() {
+        let connection = d1Connection()
+        var workspace = Workspace(name: "D1")
+        workspace.connections = [connection]
+        workspace.queryTabs[0].connectionID = connection.id
+        workspace.queryTabs[0].sql = "SELECT 42;"
+        let store = AppStore(
+            initialState: AppState(
+                workspaces: [workspace],
+                selectedWorkspaceID: workspace.id
+            ),
+            persistsState: false
+        )
+        let table = DatabaseTable(
+            schema: "main",
+            name: "order\"details",
+            columns: []
+        )
+
+        store.queryTable(table, connectionID: connection.id)
+
+        XCTAssertEqual(store.selectedWorkspace?.queryTabs.count, 1)
+        XCTAssertEqual(
+            store.selectedQuery?.sql,
+            "SELECT *\nFROM \"main\".\"order\"\"details\"\nLIMIT 100;"
+        )
+        XCTAssertEqual(store.selectedQuery?.schema, "main")
+        XCTAssertTrue(store.isExecuting)
+        store.cancelQuery()
+    }
+
     func testResultRowSelectionIsValidatedAndClearedWithExecutionContext() {
         var workspace = Workspace(name: "Rows")
         let secondQuery = QueryTab(title: "Second", sql: "SELECT 2;")

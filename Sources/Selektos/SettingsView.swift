@@ -29,6 +29,8 @@ struct SettingsView: View {
                 WorkspaceSettingsView(store: store)
             case .connections:
                 ConnectionSettingsView(store: store)
+            case .mcp:
+                MCPSettingsView(store: store)
             case .about:
                 AboutSettingsView()
             }
@@ -43,6 +45,7 @@ private enum SettingsDestination: String, CaseIterable, Identifiable {
     case appearance
     case workspaces
     case connections
+    case mcp
     case about
 
     var id: Self { self }
@@ -53,6 +56,7 @@ private enum SettingsDestination: String, CaseIterable, Identifiable {
         case .appearance: "Appearance"
         case .workspaces: "Workspaces"
         case .connections: "Connections"
+        case .mcp: "MCP Server"
         case .about: "About"
         }
     }
@@ -63,6 +67,7 @@ private enum SettingsDestination: String, CaseIterable, Identifiable {
         case .appearance: "paintbrush"
         case .workspaces: "square.grid.2x2"
         case .connections: "cylinder"
+        case .mcp: "point.3.connected.trianglepath.dotted"
         case .about: "info.circle"
         }
     }
@@ -413,11 +418,179 @@ private struct ConnectionSettingsRow: View {
     }
 }
 
+private struct MCPSettingsView: View {
+    @Bindable var store: AppStore
+    @AppStorage(
+        MCPPreferences.enabledKey,
+        store: MCPPreferences.defaults
+    ) private var isEnabled = false
+    @AppStorage(
+        MCPPreferences.readOnlyKey,
+        store: MCPPreferences.defaults
+    ) private var isReadOnly = true
+    @AppStorage(
+        MCPPreferences.maximumRowsKey,
+        store: MCPPreferences.defaults
+    ) private var maximumRows = MCPPreferences.defaultMaximumRows
+    @State private var copyStatus: String?
+
+    private var clientConfiguration: String {
+        MCPPreferences.clientConfigurationJSON()
+    }
+
+    private var exposedConnections: [MCPSettingsConnection] {
+        store.state.workspaces.flatMap { workspace in
+            workspace.connections.map {
+                MCPSettingsConnection(workspace: workspace.name, connection: $0)
+            }
+        }
+    }
+
+    var body: some View {
+        SettingsPage(
+            title: "MCP Server",
+            subtitle: "Let local AI agents query connections saved in Selektos."
+        ) {
+            SettingsCard(title: "Access") {
+                Toggle("Enable MCP server", isOn: $isEnabled)
+                SettingsHint(
+                    "The stdio server runs only when an MCP client launches it. Disabling access also rejects calls from an existing session."
+                )
+
+                Divider()
+
+                Toggle("Read-only access", isOn: $isReadOnly)
+                SettingsHint(
+                    "Recommended. Selektos rejects mutating SQL and also runs PostgreSQL queries inside read-only transactions. Restart the MCP client after changing this setting."
+                )
+
+                if !isReadOnly {
+                    Label(
+                        "Read/write mode allows agents to modify or delete database data using your saved credentials.",
+                        systemImage: "exclamationmark.triangle.fill"
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+                }
+            }
+
+            SettingsCard(title: "Query results") {
+                Picker("Maximum rows returned per tool call", selection: $maximumRows) {
+                    ForEach(MCPPreferences.rowLimitOptions, id: \.self) { limit in
+                        Text(limit.formatted()).tag(limit)
+                    }
+                }
+                SettingsHint(
+                    "Agents can request fewer rows, but cannot exceed this limit. Restart the MCP client after changing this setting."
+                )
+            }
+
+            SettingsCard(title: "Client configuration") {
+                Text(clientConfiguration)
+                    .font(.system(size: 11, design: .monospaced))
+                    .textSelection(.enabled)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.background, in: RoundedRectangle(cornerRadius: 7))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 7)
+                            .strokeBorder(.separator.opacity(0.65))
+                    }
+
+                HStack {
+                    SettingsHint(
+                        "Add this server entry to your agent's MCP configuration. Restart the MCP client after changing access settings or connections."
+                    )
+                    Spacer()
+                    if let copyStatus {
+                        Text(copyStatus)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Button("Copy Configuration", action: copyConfiguration)
+                }
+            }
+
+            SettingsCard(title: "Exposed connections") {
+                if exposedConnections.isEmpty {
+                    ContentUnavailableView(
+                        "No Connections",
+                        systemImage: "cylinder",
+                        description: Text("Add a connection before starting an MCP client.")
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 120)
+                } else {
+                    ForEach(Array(exposedConnections.enumerated()), id: \.element.id) { index, item in
+                        HStack(spacing: 12) {
+                            Image(systemName: item.connection.connectionKind == .postgresql
+                                ? "cylinder.fill"
+                                : "cloud.fill")
+                                .foregroundStyle(item.connection.connectionKind == .postgresql
+                                    ? .blue
+                                    : .orange)
+                                .frame(width: 22)
+                            VStack(alignment: .leading, spacing: 3) {
+                                Text(item.connection.name)
+                                    .fontWeight(.medium)
+                                Text("\(item.workspace) · \(item.connection.endpoint)")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                ForEach(item.toolNames, id: \.self) { toolName in
+                                    Text(toolName)
+                                        .font(.caption2.monospaced())
+                                        .foregroundStyle(.tertiary)
+                                        .textSelection(.enabled)
+                                }
+                            }
+                            Spacer()
+                        }
+                        .padding(.vertical, 3)
+                        if index < exposedConnections.count - 1 {
+                            Divider()
+                        }
+                    }
+                    SettingsHint(
+                        "Each saved connection exposes tools to list tables, describe a table, preview rows, and run SQL. Passwords remain in macOS Keychain and are never included in tool metadata."
+                    )
+                }
+            }
+        }
+    }
+
+    private func copyConfiguration() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        copyStatus = pasteboard.setString(clientConfiguration, forType: .string)
+            ? "Copied"
+            : "Copy failed"
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            copyStatus = nil
+        }
+    }
+}
+
+private struct MCPSettingsConnection: Identifiable {
+    let workspace: String
+    let connection: DatabaseConnection
+
+    var id: UUID {
+        connection.id
+    }
+
+    var toolNames: [String] {
+        [
+            MCPToolService.listTablesToolName(for: connection),
+            MCPToolService.describeTableToolName(for: connection),
+            MCPToolService.previewTableToolName(for: connection),
+            MCPToolService.queryToolName(for: connection)
+        ]
+    }
+}
+
 private struct StorageLocationView: View {
     private var fileURL: URL? {
-        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first?
-            .appending(path: "Selektos", directoryHint: .isDirectory)
-            .appending(path: "workspaces.json")
+        AppStatePersistence.defaultFileURL
     }
 
     var body: some View {
@@ -446,24 +619,42 @@ private struct StorageLocationView: View {
 
 private struct AboutSettingsView: View {
     private var version: String {
-        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-            ?? "Development build"
+        guard let shortVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else {
+            return "Development build"
+        }
+        guard let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String,
+              build != shortVersion else {
+            return "Version \(shortVersion)"
+        }
+        return "Version \(shortVersion) (\(build))"
+    }
+
+    private var copyright: String {
+        Bundle.main.object(forInfoDictionaryKey: "NSHumanReadableCopyright") as? String
+            ?? "Copyright 2026 Pluto Labs. All rights reserved."
     }
 
     var body: some View {
         SettingsPage(title: "About", subtitle: "Native database workbench for macOS.") {
             VStack(spacing: 14) {
-                Image(systemName: "tablecells.badge.ellipsis")
-                    .font(.system(size: 52))
-                    .foregroundStyle(.blue)
+                Image(nsImage: NSApp.applicationIconImage)
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 86, height: 86)
+                    .accessibilityHidden(true)
                 Text("Selektos")
                     .font(.title.bold())
                 Text(version)
                     .foregroundStyle(.secondary)
+                Text("Published by Pluto Labs")
+                    .font(.headline)
                 Text("PostgreSQL and Cloudflare D1 query editor built with SwiftUI, AppKit, and Swift concurrency.")
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: 430)
+                Text(copyright)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 36)

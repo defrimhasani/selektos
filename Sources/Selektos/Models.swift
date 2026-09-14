@@ -1,6 +1,6 @@
 import Foundation
 
-struct AppState: Codable {
+struct AppState: Codable, Sendable {
     var workspaces: [Workspace]
     var selectedWorkspaceID: UUID?
 
@@ -10,7 +10,7 @@ struct AppState: Codable {
     )
 }
 
-struct Workspace: Identifiable, Codable, Hashable {
+struct Workspace: Identifiable, Codable, Hashable, Sendable {
     var id = UUID()
     var name: String
     var connections: [DatabaseConnection] = []
@@ -23,7 +23,7 @@ struct Workspace: Identifiable, Codable, Hashable {
     }
 }
 
-struct DatabaseConnection: Identifiable, Codable, Hashable {
+struct DatabaseConnection: Identifiable, Codable, Hashable, Sendable {
     var id = UUID()
     var kind: ConnectionKind?
     var name: String
@@ -52,7 +52,7 @@ struct DatabaseConnection: Identifiable, Codable, Hashable {
     }
 }
 
-enum ConnectionKind: String, Codable, CaseIterable, Identifiable {
+enum ConnectionKind: String, Codable, CaseIterable, Identifiable, Sendable {
     case postgresql
     case cloudflareD1
 
@@ -65,7 +65,7 @@ enum ConnectionKind: String, Codable, CaseIterable, Identifiable {
     }
 }
 
-enum TLSMode: String, Codable, CaseIterable, Identifiable {
+enum TLSMode: String, Codable, CaseIterable, Identifiable, Sendable {
     case prefer
     case require
     case disable
@@ -74,13 +74,13 @@ enum TLSMode: String, Codable, CaseIterable, Identifiable {
     var title: String { rawValue.capitalized }
 }
 
-struct ConnectionLabel: Identifiable, Codable, Hashable {
+struct ConnectionLabel: Identifiable, Codable, Hashable, Sendable {
     var id = UUID()
     var name: String
     var color: LabelColor
 }
 
-enum LabelColor: String, Codable, CaseIterable, Identifiable {
+enum LabelColor: String, Codable, CaseIterable, Identifiable, Sendable {
     case red, orange, yellow, green, blue, purple, gray
     var id: Self { self }
 }
@@ -106,7 +106,7 @@ struct DatabaseColumn: Identifiable, Hashable, Sendable {
     let isPrimaryKey: Bool
 }
 
-struct QueryTab: Identifiable, Codable, Hashable {
+struct QueryTab: Identifiable, Codable, Hashable, Sendable {
     var id = UUID()
     var title = "Untitled Query"
     var sql = "SELECT version();"
@@ -120,11 +120,15 @@ struct QueryResult: Identifiable, Sendable {
     let rows: [QueryResultRow]
     let command: String
     let duration: Duration
+    var wasTruncated = false
 
     var durationText: String {
-        let milliseconds = Double(duration.components.seconds) * 1_000
+        String(format: "%.0f ms", durationMilliseconds)
+    }
+
+    var durationMilliseconds: Double {
+        Double(duration.components.seconds) * 1_000
             + Double(duration.components.attoseconds) / 1_000_000_000_000_000
-        return String(format: "%.0f ms", milliseconds)
     }
 }
 
@@ -133,14 +137,14 @@ struct QueryResultRow: Identifiable, Sendable {
     let values: [String]
 }
 
-enum ConnectionStatus: Equatable {
+enum ConnectionStatus: Equatable, Sendable {
     case disconnected
     case loading
     case connected
     case failed(String)
 }
 
-struct ConnectionDraft {
+struct ConnectionDraft: Sendable {
     var kind = ConnectionKind.postgresql
     var name = ""
     var host = "localhost"
