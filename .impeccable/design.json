@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-14T12:58:08.328+02:00",
+  "title": "Design System: Selektos — The Auditor's Ledger",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Ledger Green",
+        "canonical": "#1c3b2a",
+        "tonalRamp": ["oklch(15% 0.048 158.1)", "oklch(26% 0.048 158.1)", "oklch(38% 0.048 158.1)", "oklch(50% 0.048 158.1)", "oklch(62% 0.048 158.1)", "oklch(74% 0.048 158.1)", "oklch(86% 0.048 158.1)", "oklch(95% 0.048 158.1)"]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Dark Ledger",
+        "canonical": "#12291d",
+        "tonalRamp": ["oklch(15% 0.037 159.5)", "oklch(26% 0.037 159.5)", "oklch(38% 0.037 159.5)", "oklch(50% 0.037 159.5)", "oklch(62% 0.037 159.5)", "oklch(74% 0.037 159.5)", "oklch(86% 0.037 159.5)", "oklch(95% 0.037 159.5)"]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Greenbar Stock",
+        "canonical": "#bfd4b3",
+        "tonalRamp": ["oklch(15% 0.050 134.1)", "oklch(26% 0.050 134.1)", "oklch(38% 0.050 134.1)", "oklch(50% 0.050 134.1)", "oklch(62% 0.050 134.1)", "oklch(74% 0.050 134.1)", "oklch(86% 0.050 134.1)", "oklch(95% 0.050 134.1)"]
+      },
+      "secondary-soft": {
+        "role": "secondary",
+        "displayName": "Soft Greenbar",
+        "canonical": "#d5e2cb",
+        "tonalRamp": ["oklch(15% 0.034 131.4)", "oklch(26% 0.034 131.4)", "oklch(38% 0.034 131.4)", "oklch(50% 0.034 131.4)", "oklch(62% 0.034 131.4)", "oklch(74% 0.034 131.4)", "oklch(86% 0.034 131.4)", "oklch(95% 0.034 131.4)"]
+      },
+      "tertiary": {
+        "role": "tertiary",
+        "displayName": "Audit Red",
+        "canonical": "#a32a1b",
+        "tonalRamp": ["oklch(15% 0.160 30.7)", "oklch(26% 0.160 30.7)", "oklch(38% 0.160 30.7)", "oklch(50% 0.160 30.7)", "oklch(62% 0.160 30.7)", "oklch(74% 0.160 30.7)", "oklch(86% 0.160 30.7)", "oklch(95% 0.160 30.7)"]
+      },
+      "neutral-paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#e4e8df",
+        "tonalRamp": ["oklch(15% 0.013 126.4)", "oklch(26% 0.013 126.4)", "oklch(38% 0.013 126.4)", "oklch(50% 0.013 126.4)", "oklch(62% 0.013 126.4)", "oklch(74% 0.013 126.4)", "oklch(86% 0.013 126.4)", "oklch(95% 0.013 126.4)"]
+      },
+      "neutral-paper-edge": {
+        "role": "neutral",
+        "displayName": "Paper Edge",
+        "canonical": "#dadfd3",
+        "tonalRamp": ["oklch(15% 0.017 125.3)", "oklch(26% 0.017 125.3)", "oklch(38% 0.017 125.3)", "oklch(50% 0.017 125.3)", "oklch(62% 0.017 125.3)", "oklch(74% 0.017 125.3)", "oklch(86% 0.017 125.3)", "oklch(95% 0.017 125.3)"]
+      },
+      "neutral-hole": {
+        "role": "neutral",
+        "displayName": "Sprocket Hole",
+        "canonical": "#a8b0a2",
+        "tonalRamp": ["oklch(15% 0.022 131.5)", "oklch(26% 0.022 131.5)", "oklch(38% 0.022 131.5)", "oklch(50% 0.022 131.5)", "oklch(62% 0.022 131.5)", "oklch(74% 0.022 131.5)", "oklch(86% 0.022 131.5)", "oklch(95% 0.022 131.5)"]
+      },
+      "neutral-ink": {
+        "role": "neutral",
+        "displayName": "Letterpress Ink",
+        "canonical": "#14160f",
+        "tonalRamp": ["oklch(15% 0.014 120.6)", "oklch(26% 0.014 120.6)", "oklch(38% 0.014 120.6)", "oklch(50% 0.014 120.6)", "oklch(62% 0.014 120.6)", "oklch(74% 0.014 120.6)", "oklch(86% 0.014 120.6)", "oklch(95% 0.014 120.6)"]
+      },
+      "neutral-ink-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "canonical": "#4a5245",
+        "tonalRamp": ["oklch(15% 0.023 133.3)", "oklch(26% 0.023 133.3)", "oklch(38% 0.023 133.3)", "oklch(50% 0.023 133.3)", "oklch(62% 0.023 133.3)", "oklch(74% 0.023 133.3)", "oklch(86% 0.023 133.3)", "oklch(95% 0.023 133.3)"]
+      },
+      "neutral-ink-tertiary": {
+        "role": "neutral",
+        "displayName": "Tertiary Ink",
+        "canonical": "#5f6759",
+        "tonalRamp": ["oklch(15% 0.024 131.7)", "oklch(26% 0.024 131.7)", "oklch(38% 0.024 131.7)", "oklch(50% 0.024 131.7)", "oklch(62% 0.024 131.7)", "oklch(74% 0.024 131.7)", "oklch(86% 0.024 131.7)", "oklch(95% 0.024 131.7)"]
+      },
+      "neutral-rule": {
+        "role": "neutral",
+        "displayName": "Ledger Rule",
+        "canonical": "rgba(20, 22, 15, .26)",
+        "tonalRamp": ["oklch(15% 0.014 120.6)", "oklch(26% 0.014 120.6)", "oklch(38% 0.014 120.6)", "oklch(50% 0.014 120.6)", "oklch(62% 0.014 120.6)", "oklch(74% 0.014 120.6)", "oklch(86% 0.014 120.6)", "oklch(95% 0.014 120.6)"]
+      },
+      "neutral-rule-hair": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "rgba(20, 22, 15, .14)",
+        "tonalRamp": ["oklch(15% 0.014 120.6)", "oklch(26% 0.014 120.6)", "oklch(38% 0.014 120.6)", "oklch(50% 0.014 120.6)", "oklch(62% 0.014 120.6)", "oklch(74% 0.014 120.6)", "oklch(86% 0.014 120.6)", "oklch(95% 0.014 120.6)"]
+      }
+    },
+    "typographyMeta": {
+      "display-hero": {
+        "displayName": "Hero Declaration",
+        "purpose": "One dominant institutional statement in condensed uppercase."
+      },
+      "display-section": {
+        "displayName": "Folio Headline",
+        "purpose": "Section headings with paired ledger rules."
+      },
+      "body": {
+        "displayName": "Workhorse Prose",
+        "purpose": "Primary explanatory reading copy."
+      },
+      "body-lede": {
+        "displayName": "Opening Lede",
+        "purpose": "A modestly enlarged introduction without changing voice."
+      },
+      "title": {
+        "displayName": "Record Title",
+        "purpose": "Ledger entry and procedural titles."
+      },
+      "mono-data": {
+        "displayName": "Posted Data",
+        "purpose": "Commands, SQL, identifiers, paths, values, and figures."
+      },
+      "mono-label": {
+        "displayName": "Ledger Label",
+        "purpose": "Tracked uppercase folios, column heads, status, and metadata."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-emphasized",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Shared easing for restrained state transitions and the single authored stamp strike."
+      },
+      {
+        "name": "state-color",
+        "value": "160ms–180ms",
+        "purpose": "Hover and copied-state color changes without lift or scale."
+      },
+      {
+        "name": "refusal-strike",
+        "value": "620ms",
+        "purpose": "One-time REFUSED stamp strike when the enforcement example enters view."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.001ms, one iteration",
+        "purpose": "Global reduced-motion guard; smooth scrolling is also disabled."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "workspace-two-column",
+        "value": "1080px"
+      },
+      {
+        "name": "major-stack",
+        "value": "900px"
+      },
+      {
+        "name": "record-stack",
+        "value": "700px"
+      },
+      {
+        "name": "folio-trim",
+        "value": "420px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Source Button",
+      "kind": "button",
+      "refersTo": "source-button",
+      "description": "The solid ledger-green action used for source and primary destination links.",
+      "html": "<a class=\"ds-source-button\" href=\"#\"><svg aria-hidden=\"true\" viewBox=\"0 0 16 16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"none\" stroke=\"currentColor\"/><path d=\"M5 8h6M8 5l3 3-3 3\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Source</span></a>",
+      "css": ".ds-source-button { display:inline-flex; align-items:center; gap:.42rem; background:var(--ledger, #1c3b2a); color:var(--paper, #e4e8df); padding:.46rem .78rem; border:0; border-radius:0; font:600 .78rem/1 var(--text, \"Archivo\", sans-serif); letter-spacing:.02em; text-decoration:none; transition:background .18s cubic-bezier(.16,1,.3,1); } .ds-source-button svg { width:15px; height:15px; } .ds-source-button:hover { background:var(--ledger-dk, #12291d); } .ds-source-button:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:3px; }"
+    },
+    {
+      "name": "Copy Button",
+      "kind": "button",
+      "refersTo": "copy-button",
+      "description": "The outlined utility control used to copy commands and configuration.",
+      "html": "<button class=\"ds-copy-button\" type=\"button\"><svg aria-hidden=\"true\" viewBox=\"0 0 20 20\"><rect x=\"7\" y=\"7\" width=\"9\" height=\"10\" rx=\"1\"/><path d=\"M13 4.5H5a1 1 0 0 0-1 1v8\"/></svg><span>Copy</span></button>",
+      "css": ".ds-copy-button { display:inline-flex; align-items:center; gap:.4rem; padding:.38rem .7rem; background:transparent; color:var(--ledger, #1c3b2a); border:1px solid currentColor; border-radius:0; font:600 .76rem/1 var(--text, \"Archivo\", sans-serif); letter-spacing:.05em; text-transform:uppercase; cursor:pointer; transition:background .16s cubic-bezier(.16,1,.3,1), color .16s cubic-bezier(.16,1,.3,1); } .ds-copy-button svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:1.5; } .ds-copy-button:hover, .ds-copy-button.is-done { background:var(--ledger, #1c3b2a); color:var(--paper, #e4e8df); } .ds-copy-button:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:3px; }"
+    },
+    {
+      "name": "Rights Tag",
+      "kind": "chip",
+      "refersTo": "rights-tag",
+      "description": "A square mono label for read rights and warning states.",
+      "html": "<span class=\"ds-rights-tag\">Read · always</span> <span class=\"ds-rights-tag ds-rights-tag--warn\">Read by default</span>",
+      "css": ".ds-rights-tag { display:inline-block; white-space:nowrap; border:1px solid var(--ledger, #1c3b2a); color:var(--ledger, #1c3b2a); padding:.16rem .45rem; border-radius:0; font:500 .76rem/1.4 var(--mono, \"Sometype Mono\", monospace); letter-spacing:.08em; text-transform:uppercase; } .ds-rights-tag--warn { border-color:var(--red, #a32a1b); color:var(--red, #a32a1b); } .ds-rights-tag:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:3px; }"
+    },
+    {
+      "name": "Masthead Index",
+      "kind": "nav",
+      "description": "Folio-numbered navigation that wraps into a ruled row instead of disappearing.",
+      "html": "<nav class=\"ds-index\" aria-label=\"Sections\"><a href=\"#\"><span>02</span> The books</a><a href=\"#\"><span>03</span> Posting rights</a><a href=\"#\"><span>04</span> Tools</a></nav>",
+      "css": ".ds-index { display:flex; flex-wrap:wrap; gap:.5rem 1.2rem; padding:.55rem 0; border-top:1px solid rgba(20,22,15,.26); } .ds-index a { display:flex; align-items:baseline; gap:.42rem; color:var(--ink, #14160f); padding-bottom:2px; border-bottom:1px solid transparent; font:500 .82rem/1 var(--text, \"Archivo\", sans-serif); letter-spacing:.03em; text-decoration:none; white-space:nowrap; } .ds-index a span { color:var(--ink-3, #5f6759); font:500 .76rem/1 var(--mono, \"Sometype Mono\", monospace); font-variant-numeric:tabular-nums; } .ds-index a:hover { border-bottom-color:var(--ink, #14160f); } .ds-index a:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:3px; }"
+    },
+    {
+      "name": "Ledger Posting",
+      "kind": "custom",
+      "refersTo": "ledger-row",
+      "description": "A ruled numbered record used when an action or result should read as posted evidence.",
+      "html": "<div class=\"ds-posting\"><div class=\"ds-posting-head\"><span>Entry</span><span>Description</span><span>Rights</span></div><div class=\"ds-posting-row\"><span class=\"ds-posting-no\">001</span><div><strong>Build it from source</strong><code>$ swift run Selektos</code></div><span class=\"ds-posting-rights\">Yours</span></div></div>",
+      "css": ".ds-posting { border-top:1px solid var(--ink, #14160f); color:var(--ink, #14160f); } .ds-posting-head, .ds-posting-row { display:grid; grid-template-columns:3.6rem 1fr 5.2rem; } .ds-posting-head { padding:.44rem 0; border-bottom:1px solid rgba(20,22,15,.26); color:var(--ink-2, #4a5245); font:500 .76rem/1 var(--mono, \"Sometype Mono\", monospace); letter-spacing:.11em; text-transform:uppercase; } .ds-posting-head span { padding-inline:.55rem; } .ds-posting-row { background:var(--bar, #bfd4b3); border-bottom:1px solid rgba(20,22,15,.26); } .ds-posting-row > * { padding:.9rem; border-right:1px solid rgba(20,22,15,.26); } .ds-posting-row > *:last-child { border-right:0; } .ds-posting-no, .ds-posting-rights, .ds-posting-row code { font-family:var(--mono, \"Sometype Mono\", monospace); font-variant-numeric:tabular-nums; } .ds-posting-row strong { display:block; margin-bottom:.55rem; font:700 1.02rem/1.2 var(--text, \"Archivo\", sans-serif); } .ds-posting-row code { display:block; color:var(--ledger-dk, #12291d); font-size:.83rem; } .ds-posting-rights { text-align:right; color:var(--ledger, #1c3b2a); font-size:.76rem; text-transform:uppercase; }"
+    },
+    {
+      "name": "Ruled Schedule",
+      "kind": "custom",
+      "description": "A compact ledger table with greenbar alternation and mono identifiers.",
+      "html": "<table class=\"ds-schedule\"><thead><tr><th>Entry</th><th>Tool</th><th>Rights</th></tr></thead><tbody><tr><td>001</td><td>list_connections</td><td>Read</td></tr><tr><td>002</td><td>list_tables_&lt;conn&gt;</td><td>Read · always</td></tr></tbody></table>",
+      "css": ".ds-schedule { width:100%; border-collapse:collapse; color:var(--ink, #14160f); } .ds-schedule th { padding:.5rem .8rem; border-top:1px solid var(--ink, #14160f); border-bottom:1px solid var(--ink, #14160f); color:var(--ink-2, #4a5245); font:500 .76rem/1.6 var(--mono, \"Sometype Mono\", monospace); letter-spacing:.11em; text-align:left; text-transform:uppercase; } .ds-schedule td { padding:.72rem .8rem; border-bottom:1px solid rgba(20,22,15,.26); font:500 .86rem/1.45 var(--mono, \"Sometype Mono\", monospace); font-variant-numeric:tabular-nums; } .ds-schedule tbody tr:nth-child(odd) { background:var(--bar, #bfd4b3); } .ds-schedule:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:-2px; }"
+    },
+    {
+      "name": "Audit Stamp",
+      "kind": "custom",
+      "description": "A scarce overprinted refusal mark for consequential audit outcomes.",
+      "html": "<div class=\"ds-audit-stamp\"><span>Refused</span><i></i><span>No posting rights</span></div>",
+      "css": ".ds-audit-stamp { display:inline-flex; align-items:center; gap:.5rem; white-space:nowrap; color:var(--red, #a32a1b); border:2.5px solid currentColor; box-shadow:inset 0 0 0 1px var(--paper, #e4e8df), inset 0 0 0 3px currentColor; padding:.42rem 1rem; font:700 .76rem/1 var(--text, \"Archivo\", sans-serif); letter-spacing:.14em; text-transform:uppercase; transform:rotate(-4deg); mix-blend-mode:multiply; opacity:.88; } .ds-audit-stamp i { width:5px; height:5px; background:currentColor; border-radius:50%; } .ds-audit-stamp:focus-visible { outline:2px solid var(--red, #a32a1b); outline-offset:3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Auditor's Ledger",
+    "overview": "Selektos uses the material language of greenbar continuous-feed machine stock organized by double-entry ledger grammar. It should feel institutional, exact, inspectable, and physical without becoming nostalgic decoration: data is posted into ruled records, state is printed in place, and security boundaries are shown as accounting facts.\n\nThe system is dense but orderly. Cool paper, dark ledger fields, hairline rules, tabular figures, and running folio feet carry hierarchy without cards or ornamental chrome. The visual world supports the product's local-first and read-only posture by making custody, rights, and bounded results visible rather than merely promising them.\n\nSurface-specific narrative belongs in each surface brief. The current landing page's folio sequence, build-from-source entry, and side-by-side refusal example are expressions of this system, not mandatory compositions for every future Selektos surface.",
+    "keyCharacteristics": [
+      "Continuous-feed paper with full-height sprocket margins.",
+      "Edge-to-edge ruled columns, paired hairlines, and alternating greenbar rows.",
+      "Condensed institutional display type, workhorse sans prose, and line-printer mono data.",
+      "Flat tonal hierarchy with no floating card layer.",
+      "Audit red reserved for refusal, critical focus, and command prompts.",
+      "Running folio feet in place of decorative kickers."
+    ],
+    "rules": [
+      {
+        "name": "The Audit Red Rule",
+        "body": "Red is evidence of refusal, risk, focus, or a command prompt; it is never a general decorative accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paper Is a Surface Rule",
+        "body": "Cool Paper is the default canvas. Greenbar and Ledger Green create functional regions, not detached cards.",
+        "section": "colors"
+      },
+      {
+        "name": "The Greenbar Exception Rule",
+        "body": "Repeating gradients are permitted only to reproduce functional greenbar stock; radial gradients are permitted only for sprocket holes.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three-Voice Rule",
+        "body": "Big Shoulders declares, Archivo explains, and Sometype Mono records; do not exchange their jobs.",
+        "section": "typography"
+      },
+      {
+        "name": "The Posted Figure Rule",
+        "body": "Every figure, identifier, command, and machine state uses the mono voice with tabular numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The Continuous Sheet Rule",
+        "body": "New regions extend the ledger through shared rules and tonal bands; they do not become isolated card islands.",
+        "section": "layout"
+      },
+      {
+        "name": "The Responsive Record Rule",
+        "body": "Tabular structures stack into readable records on narrow screens while preserving order, labels, and dividers.",
+        "section": "layout"
+      },
+      {
+        "name": "The No Decorative Shadow Rule",
+        "body": "Never use shadows to lift panels, buttons, or navigation. If hierarchy is unclear, strengthen ruling, tone, or spacing.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Ledger Rule",
+        "body": "Containers, controls, tags, code panels, and table regions use zero radius.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do build hierarchy from ruling, banding, dense records, and tonal contrast.",
+      "Do keep display type condensed and uppercase, prose readable, and all figures and commands monospaced.",
+      "Do preserve full-height sprocket margins and the continuous-sheet reading model on authored web surfaces.",
+      "Do keep the masthead index visible by wrapping it at narrower widths.",
+      "Do theme selection, scrollbars, focus, print, and reduced-motion behavior as part of the world.",
+      "Do use running folio feet for section identity and pagination."
+    ],
+    "donts": [
+      "Don't introduce cards, pills, rounded containers, glass panels, or floating window chrome.",
+      "Don't use decorative gradients; only functional greenbar stripes and sprocket-hole radials belong.",
+      "Don't use decorative drop shadows. Audit-stamp inset registration lines are the narrow functional exception.",
+      "Don't use Audit Red as a broad brand fill or routine hover color.",
+      "Don't introduce eyebrow or kicker copy above headings; the ledger's running folio system already carries orientation.",
+      "Don't use generic glyph characters as interface icons; use authored inline SVG where an icon is necessary.",
+      "Don't promote a landing-page folio, claim, or proof sequence into a mandatory global component."
+    ]
+  }
+}

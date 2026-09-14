@@ -6,3 +6,12 @@ dist/
 .wrangler/cache/
 *.xcodeproj/xcuserdata/
 *.xcworkspace/xcuserdata/
+
+# Impeccable local/session artifacts
+.impeccable/brief-body.md
+.impeccable/config.local.json
+.impeccable/direction-payload.json
+.impeccable/hook.cache.json
+.impeccable/questions/
+.impeccable/refs/
+.impeccable/review/

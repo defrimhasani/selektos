@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "docs/styles.css"
+        ],
+        "createdAt": "2026-09-14T10:24:35.961Z",
+        "reason": "Greenbar banding is the committed visual world: the user locked the Auditor's Ledger direction (seed e1a572ea), whose OWN-WORLD block pins greenbar continuous-feed paper. The repeating gradient renders the bar stock and the result-grid zebra fossil, not surface decoration."
+      }
+    ]
+  }
+}
